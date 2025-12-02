@@ -42,28 +42,27 @@ with right_col:
             st.dataframe(df)
         except Exception as e:
             st.error(f"Error: {e}")
+from groq import Groq
 
-import openai
+st.header("ChatGPT Assistant (Groq AI)")
 
-st.header("ChatGPT Assistant")
+question = st.text_input("Ask Groq AI a question:")
 
-question = st.text_input("Ask ChatGPT a question:")
-
-if st.button("Ask ChatGPT"):
+if st.button("Ask Groq"):
     try:
-        api_key = st.secrets["OPENAI_API_KEY"]
-        client = openai.OpenAI(api_key=api_key)
+        api_key = st.secrets["GROQ_API_KEY"]
+        client = Groq(api_key=api_key)
 
         completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="llama-3.1-8b-instant",  # correct working model
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": question}
             ]
         )
 
-        st.write("### ChatGPT Response:")
-        st.write(completion.choices[0].message["content"])
+        st.write("### Groq Response:")
+        st.write(completion.choices[0].message.content)   # FIXED HERE
 
     except Exception as e:
         st.error(f"Error: {e}")
